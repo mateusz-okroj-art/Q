@@ -4,7 +4,6 @@
     {
       "name": "linux-debug",
       "displayName": "Linux Debug",
-      "description": "Podsystem Windows dla systemu Linux (WSL) lub zdalny system Linux jako element docelowy.",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
@@ -13,13 +12,11 @@
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Linux"
-      },
-      "vendor": { "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": { "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}" } }
+      }
     },
     {
       "name": "macos-debug",
       "displayName": "macOS Debug",
-      "description": "Określ cel będący zdalnym systemem macOS.",
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
@@ -28,19 +25,18 @@
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Darwin"
-      },
-      "vendor": { "microsoft.com/VisualStudioRemoteSettings/CMake/1.0": { "sourceDir": "$env{HOME}/.vs/$ms{projectDirName}" } }
+      }
     },
     {
       "name": "windows-base",
-      "description": "System Windows ze środowiskiem programistycznym programu Visual Studio jako element docelowy.",
       "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build/${presetName}",
       "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe"
+        "CMAKE_CXX_COMPILER": "cl.exe",
+        "CMAKE_PREFIX_PATH": "C:/Qt/6.3.1/msvc2019_64"
       },
       "condition": {
         "type": "equals",
@@ -51,7 +47,6 @@
     {
       "name": "x64-debug",
       "displayName": "x64 Debug",
-      "description": "Docelowy system Windows (64-bitowy) ze środowiskiem programistycznym programu Visual Studio. (Debug)",
       "inherits": "windows-base",
       "architecture": {
         "value": "x64",
@@ -62,14 +57,12 @@
     {
       "name": "x64-release",
       "displayName": "x64 Release",
-      "description": "Docelowy system Windows (64-bitowy) ze środowiskiem programistycznym programu Visual Studio. (RelWithDebInfo)",
       "inherits": "x64-debug",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     },
     {
       "name": "x86-debug",
       "displayName": "x86 Debug",
-      "description": "Docelowy system Windows (32-bitowy) ze środowiskiem programistycznym programu Visual Studio. (Debug)",
       "inherits": "windows-base",
       "architecture": {
         "value": "x86",
@@ -80,7 +73,6 @@
     {
       "name": "x86-release",
       "displayName": "x86 Release",
-      "description": "Docelowy systemu Windows (32-bitowy) ze środowiskiem programistycznym programu Visual Studio. (RelWithDebInfo)",
       "inherits": "x86-debug",
       "cacheVariables": { "CMAKE_BUILD_TYPE": "Release" }
     }
