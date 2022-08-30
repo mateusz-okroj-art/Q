@@ -35,8 +35,8 @@
       "installDir": "${sourceDir}/out/install/${presetName}",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "cl.exe",
-        "CMAKE_CXX_COMPILER": "cl.exe",
-        "CMAKE_PREFIX_PATH": "C:/Qt/6.3.1/msvc2019_64"
+        "CMAKE_CXX_COMPILER": "cl.exe"
+        //"CMAKE_PREFIX_PATH": "C:/Qt/6.3.1/msvc2019_64"
       },
       "condition": {
         "type": "equals",

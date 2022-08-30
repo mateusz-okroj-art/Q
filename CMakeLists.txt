@@ -2,19 +2,33 @@ cmake_minimum_required(VERSION 3.20)
 
 project(Root)
 
-set(VCPKG_Install_List
+if(DEFINED MODE AND MODE STREQUAL "install")
+
+	include(packages.cake)
+	include(cmake/BuildPackage.cmake)
+
+	BUILD_VCPKG_PACKAGE(${3rd_packages})
+
+else()
+
+	set(VCPKG_CMAKE .vcpkg/scripts/buildsystems/vcpkg.cmake)
+
+	if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${VCPKG_CMAKE})
+
+		include(cmake/GetDependenciesVersion.cmake)
+		include(cmake/InstallPackage.cmake)
+		
+	endif()
 	
-)
+	include(${VCPKG_CMAKE})
 
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+	set(CMAKE_CXX_STANDARD 20)
+	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+	# Fix GTest
+	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-include(cmake/ConfigureVCPKG.cmake)
-include(cmake/LoadGTest.cmake)
+	add_subdirectory(libs)
+	add_subdirectory(app)
 
-find_package(Qt6 REQUIRED COMPONENTS Core)
-
-add_subdirectory(libs)
-add_subdirectory(app)
+endif()
