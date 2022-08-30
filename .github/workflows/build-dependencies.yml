@@ -12,6 +12,9 @@ jobs:
     
         runs-on: ubuntu-latest
   
+        outputs:
+          release_id: ${{ steps.create_release.outputs.id }}
+  
         steps:
 
             # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -22,6 +25,16 @@ jobs:
               id: ID
               shell: sh
               run: echo "::set-output name=ID::$(date +'%Y%m%d%H%M%S')"
+              
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              with:
+                tag_name: ${{ steps.ID.outputs.ID }}
+                release_name: Dependencies ${{ steps.ID.outputs.ID }}
+                body: Package of dependencies for build.
+                draft: false
+                prerelease: true
 
     build:
 
@@ -44,4 +57,6 @@ jobs:
 
         steps:
 
-          - run: ''
+          - uses: eregon/publish-release@v1
+            with:
+              release_id: ${{ jobs.configure.outputs.release_id }}
