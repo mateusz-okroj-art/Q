@@ -40,6 +40,11 @@ jobs:
           # An explicit key for restoring and saving the cache
           key: RollingBuildCI-${{ matrix.runsOn }}
           
+      - name: Install CMake
+        # You may pin to the exact commit or the version.
+        # uses: Symbitic/install-cmake@301e932c0011b8d12d8bf33d4975fd1e17972709
+        uses: Symbitic/install-cmake@v0.1.0
+          
       - name: Configure Visual Studio
         if: matrix.runsOn == 'windows-latest'
         # You may pin to the exact commit or the version.
