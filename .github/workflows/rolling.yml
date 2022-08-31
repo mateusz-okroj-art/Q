@@ -6,10 +6,10 @@ name: Rolling build
 on:
   
   push:
-    branches: [ "main", "feature/*", "fix/*", "release/*" ]
+    branches: [ main, feature/*, fix/*, release/* ]
     
   pull_request:
-    branches-ignore: [ "main", "feature/*", "fix/*", "release/*" ]
+    branches-ignore: [ main, feature/*, fix/*, release/* ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -41,13 +41,13 @@ jobs:
           key: RollingBuildCI-${{ matrix.runsOn }}
           
       - name: Configure Visual Studio
-        if: ${{ matrix.runsOn == "windows-latest" }}
+        if: matrix.runsOn == "windows-latest"
         # You may pin to the exact commit or the version.
         # uses: egor-tensin/vs-shell@9a932a62d05192eae18ca370155cf877eecc2202
         uses: egor-tensin/vs-shell@v2
         
       - name: Install Clang
-        if: ${{ matrix.runsOn != "windows-latest" }}
+        if: matrix.runsOn != "windows-latest"
         # You may pin to the exact commit or the version.
         # uses: egor-tensin/setup-clang@01d437c0618e76d3c44e7d58f5d175c75cb37bac
         uses: egor-tensin/setup-clang@v1
