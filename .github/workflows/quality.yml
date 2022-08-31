@@ -40,16 +40,19 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Configure Visual Studio
+        if: matrix.runsOn == 'windows-latest'
         # You may pin to the exact commit or the version.
         # uses: egor-tensin/vs-shell@9a932a62d05192eae18ca370155cf877eecc2202
         uses: egor-tensin/vs-shell@v2
         
       - name: Set up JDK 11
+        if: matrix.runsOn == 'windows-latest'
         uses: actions/setup-java@v1
         with:
           java-version: 11
           
       - name: Configure SonarScanner
+        if: matrix.runsOn == 'windows-latest'
         env:
           SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-windows.zip
         run: |
@@ -59,6 +62,7 @@ jobs:
           echo "$HOME\.sonar\sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-windows\bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
       
       - name: Configure Sonar BuildWrapper
+        if: matrix.runsOn == 'windows-latest'
         env:
           BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-win-x86.zip
         run: |
@@ -69,11 +73,21 @@ jobs:
       - name: Configure CMake
         run: cmake --preset x64-debug .
           
-      - name: Build & Test
+      - name: Build & Test with Sonar BuildWrapper
+        if: matrix.runsOn == 'windows-latest'
         run: |
           build-wrapper-win-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build out/build && ctest out/build
       
+      - name: Build
+        if: matrix.runsOn != 'windows-latest'
+        run: cmake --build out/build
+      
+      - name: Test
+        if: matrix.runsOn != 'windows-latest'
+        run: ctest out/build
+      
       - name: Run SonarScanner
+        if: matrix.runsOn == 'windows-latest'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
