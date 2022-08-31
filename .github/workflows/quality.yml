@@ -1,0 +1,100 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Quality gate
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches-ignore: [ main, feature/*, fix/*, release/* ]
+    
+  pull_request:
+    branches: [ main, release/* ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+
+  # This workflow contains a single job called "build"
+  build:
+  
+    strategy:
+      matrix:
+        runsOn: [ "ubuntu-latest", "windows-latest", "macOs-latest" ]
+  
+    # The type of runner that the job will run on
+    runs-on: ${{ matrix.runsOn }}
+
+    env:
+      SONAR_SCANNER_VERSION: 4.7.0.2747
+      SONAR_SERVER_URL: "https://sonarcloud.io"
+      BUILD_WRAPPER_OUT_DIR: out/build
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Install CMake
+        # You may pin to the exact commit or the version.
+        # uses: lukka/get-cmake@2e45cd82cd67abcfd1b61fb17c253b99f8257189
+        uses: lukka/get-cmake@v3.21.2
+
+      - name: Setup VS Dev Environment
+        if: matrix.runsOn == 'windows-latest'
+        # You may pin to the exact commit or the version.
+        # uses: seanmiddleditch/gha-setup-vsdevenv@adf16e54e207da0da148c8901a98a34d7aa3eb7a
+        uses: seanmiddleditch/gha-setup-vsdevenv@v4
+        
+      - name: Set up JDK 11
+        if: matrix.runsOn == 'windows-latest'
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          
+      - name: Configure SonarScanner
+        if: matrix.runsOn == 'windows-latest'
+        env:
+          SONAR_SCANNER_DOWNLOAD_URL: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${{ env.SONAR_SCANNER_VERSION }}-windows.zip
+        run: |
+          New-Item -Force -ItemType directory -Path $HOME\.sonar
+          curl -sSLo $HOME\.sonar\sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
+          unzip -o $HOME\.sonar\sonar-scanner.zip -d $HOME\.sonar\
+          echo "$HOME\.sonar\sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-windows\bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+      
+      - name: Configure Sonar BuildWrapper
+        if: matrix.runsOn == 'windows-latest'
+        env:
+          BUILD_WRAPPER_DOWNLOAD_URL: ${{ env.SONAR_SERVER_URL }}/static/cpp/build-wrapper-win-x86.zip
+        run: |
+          curl -sSLo $HOME\.sonar\build-wrapper.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
+          unzip -o $HOME\.sonar\build-wrapper.zip -d $HOME\.sonar\
+          echo "$HOME\.sonar\build-wrapper-win-x86" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
+          
+      - name: Configure CMake
+        run: cmake --preset x64-debug .
+          
+      - name: Build & Test with Sonar BuildWrapper
+        if: matrix.runsOn == 'windows-latest'
+        run: |
+          build-wrapper-win-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build out/build && ctest out/build
+      
+      - name: Build
+        if: matrix.runsOn != 'windows-latest'
+        run: cmake --build out/build
+      
+      - name: Test
+        if: matrix.runsOn != 'windows-latest'
+        run: ctest out/build
+      
+      - name: Run SonarScanner
+        if: matrix.runsOn == 'windows-latest'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner --define sonar.host.url="${{ env.SONAR_SERVER_URL }}" --define sonar.cfamily.build-wrapper-output="${{ env.BUILD_WRAPPER_OUT_DIR }}"
