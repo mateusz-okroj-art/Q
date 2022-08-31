@@ -4,6 +4,9 @@ name: Build dependencies
 
 on:
 
+  schedule:
+    - cron: "0 0 * * Sat"
+
   workflow_dispatch:
 
 jobs:
@@ -60,3 +63,10 @@ jobs:
           - uses: eregon/publish-release@v1
             with:
               release_id: ${{ jobs.configure.outputs.release_id }}
+              
+          - name: Update version id
+            uses: jossef/action-set-json-field@v2
+            with:
+              file: Versions.json
+              field: Dependencies
+              value: ${{ jobs.configure.outputs.release_id }}
