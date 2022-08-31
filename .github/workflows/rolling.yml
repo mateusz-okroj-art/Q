@@ -46,6 +46,7 @@ jobs:
         uses: lukka/get-cmake@v3.21.2
 
       - name: Setup VS Dev Environment
+        if: matrix.runsOn == 'windows-latest'
         # You may pin to the exact commit or the version.
         # uses: seanmiddleditch/gha-setup-vsdevenv@adf16e54e207da0da148c8901a98a34d7aa3eb7a
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
