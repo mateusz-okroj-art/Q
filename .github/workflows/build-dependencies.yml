@@ -69,7 +69,7 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-              
+
           - name: Git config
             run: |
               git config --global user.name "Github Action"
