@@ -7,7 +7,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 
 	find_program(Git NAMES git)
 
-	set(vcpkg_dir ${CMAKE_CURRENT_BINARY_DIR}/vcpkg)
+	set(vcpkg_dir ${CMAKE_BINARY_DIR}/vcpkg)
 
 	if(IS_DIRECTORY vcpkg_dir)
 		file(REMOVE_RECURSE vcpkg_dir)
@@ -16,7 +16,6 @@ function(Build_VCPKG_Package vcpkg_libraries)
 	message(STATUS "Downloading VCPKG...")
 
 	execute_process(
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 		COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
 	)
 
@@ -42,4 +41,14 @@ function(Build_VCPKG_Package vcpkg_libraries)
 			COMMAND ${vcpkg_app} install ${package_name}
 		)
 	endforeach()
+
+	file(GLOB_RECURSE paths ${CMAKE_CURRENT_BINARY_DIR}/vcpkg/*.*)
+
+	message(STATUS "Creating archive vcpkg.zip")
+
+	file(ARCHIVE_CREATE
+		OUTPUT vcpkg.zip
+		PATHS ${paths}
+		FORMAT zip
+		VERBOSE)
 endfunction()

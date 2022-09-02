@@ -4,7 +4,7 @@ project(Root)
 
 if(DEFINED MODE AND MODE STREQUAL "install")
 
-	include(packages.cake)
+	include(packages.cmake)
 	include(cmake/BuildPackage.cmake)
 
 	BUILD_VCPKG_PACKAGE(${3rd_packages})
