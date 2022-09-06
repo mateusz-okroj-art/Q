@@ -16,6 +16,7 @@ jobs:
   
         outputs:
           release_id: ${{ steps.create_release.outputs.id }}
+          dependencies_id: ${{ steps.ID.outputs.ID }}
           release_url: ${{ steps.create_release.outputs.upload_url }}
   
         steps:
@@ -105,7 +106,7 @@ jobs:
             with:
               file: Versions.json
               field: Dependencies
-              value: ${{ needs.configure.outputs.release_id }}
+              value: ${{ needs.configure.outputs.dependencies_id }}
               
           - name: Commit new version to Git repo
             run: |
