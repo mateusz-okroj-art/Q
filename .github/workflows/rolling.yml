@@ -34,6 +34,7 @@ jobs:
 
       - name: Get branch name
         id: branch_name
+        shell: bash
         run: |
           BRANCH=$GITHUB_REF
           echo ::set-output name=branch_slug::${BRANCH////_}
