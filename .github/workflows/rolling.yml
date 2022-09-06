@@ -32,13 +32,19 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 
+      - name: Get branch name
+        run: |
+          BRANCH=$GITHUB_REF
+          BRANCH_SLUG="${BRANCH////_}"
+          echo $BRANCH_SLUG
+
       - name: Cache
         uses: actions/cache@v3.0.8
         with:
           # A list of files, directories, and wildcard patterns to cache and restore
           path: out/build/*
           # An explicit key for restoring and saving the cache
-          key: RollingBuildCI-${{ matrix.runsOn }}
+          key: RollingBuildCI-${{ matrix.runsOn }}-$BRANCH_SLUG
           
       - name: Install CMake
         # You may pin to the exact commit or the version.
