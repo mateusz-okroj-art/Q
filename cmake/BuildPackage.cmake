@@ -43,7 +43,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		)
 	endforeach()
 
-	file(GLOB_RECURSE paths ${CMAKE_BINARY_DIR}/vcpkg/*.*)
+	file(GLOB_RECURSE paths ${vcpkg_dir}/*)
 
 	message(STATUS "Creating archive vcpkg.zip")
 
