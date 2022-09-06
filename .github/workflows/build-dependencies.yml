@@ -5,9 +5,12 @@ name: Build dependencies
 on:
 
   push:
-    paths: /Versions.json
+    paths: Versions.json
 
   workflow_dispatch:
+  
+env:
+  token: $GITHUB_TOKEN
 
 jobs:
   
