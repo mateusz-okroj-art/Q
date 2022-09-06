@@ -67,10 +67,11 @@ jobs:
             run: cmake --preset "install"
             
           - name: dir lists
-            run: | 
-              dir .
+            shell: bash
+            run: |
+              ls .
               echo "--------------"
-              dir ./out/install
+              ls ./out/install
             
           - name: Upload Release Asset
             id: upload-release-asset 
