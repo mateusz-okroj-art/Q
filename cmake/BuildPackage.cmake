@@ -52,7 +52,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 	message(STATUS "Creating archive vcpkg.zip")
 
 	file(ARCHIVE_CREATE
-		OUTPUT vcpkg.zip
+		OUTPUT ${CMAKE_CURRENT_LIST_DIR}/vcpkg.zip
 		PATHS ${paths}
 		FORMAT zip
 		VERBOSE)
