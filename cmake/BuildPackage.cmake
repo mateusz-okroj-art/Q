@@ -32,18 +32,32 @@ function(Build_VCPKG_Package vcpkg_libraries)
 
 	message(STATUS "Installing VCPKG...")
 
-	execute_process(COMMAND ${VCPKG_START})
+	execute_process(
+		COMMAND ${VCPKG_START}
+		RESULT_VARIABLE result_process
+	)
+
+	if(NOT ${result_process} EQUAL 0)
+		message(FATAL_ERROR "Error while installing VCPKG.")
+	endif()
 
 	find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
 
-	foreach(package_name ${vcpkg_libraries})
+	foreach(package_name ${${vcpkg_libraries}})
 		message(STATUS "vcpkg: Installing ${package_name}...")
 		execute_process(
 			COMMAND ${vcpkg_app} install ${package_name}
+			RESULT_VARIABLE result_process
 		)
+
+		if(NOT ${result_process} EQUAL 0)
+			message(FATAL_ERROR "Error while installing vcpkg - ${package_name}.")
+		endif()
 	endforeach()
 
 	get_filename_component(vcpkg_app_dir ${vcpkg_app} DIRECTORY)
+
+	message(STATUS "Removing Git repo dir.")
 
 	file(REMOVE_RECURSE ${vcpkg_app_dir}/.git)
 
