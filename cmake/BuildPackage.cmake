@@ -43,7 +43,11 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		)
 	endforeach()
 
-	file(GLOB_RECURSE paths ${vcpkg_dir}/*)
+	get_filename_component(vcpkg_app_dir ${vcpkg_app} DIRECTORY)
+
+	file(REMOVE_RECURSE ${vcpkg_app_dir}/.git)
+
+	file(GLOB_RECURSE paths ${vcpkg_app_dir}/*)
 
 	message(STATUS "Creating archive vcpkg.zip")
 
