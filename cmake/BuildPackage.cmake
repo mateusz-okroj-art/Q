@@ -16,7 +16,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 	message(STATUS "Downloading VCPKG...")
 
 	execute_process(
-		WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 		COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
 	)
 
@@ -43,7 +43,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		)
 	endforeach()
 
-	file(GLOB_RECURSE paths ${CMAKE_CURRENT_BINARY_DIR}/vcpkg/*.*)
+	file(GLOB_RECURSE paths ${CMAKE_BINARY_DIR}/vcpkg/*.*)
 
 	message(STATUS "Creating archive vcpkg.zip")
 
