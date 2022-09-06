@@ -32,7 +32,7 @@ jobs:
               env:
                 GITHUB_TOKEN: ${{ secrets.BUILD_DEPENDENCIES }}
               with:
-                tag_name: ${{ steps.ID.outputs.ID }}
+                tag_name: dependencies-${{ steps.ID.outputs.ID }}
                 release_name: Dependencies ${{ steps.ID.outputs.ID }}
                 body: Package of dependencies for build.
                 draft: false
