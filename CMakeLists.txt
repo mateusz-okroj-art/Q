@@ -21,7 +21,7 @@ else()
 
 		set(VCPKG_CMAKE .vcpkg/scripts/buildsystems/vcpkg.cmake)
 
-		if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${VCPKG_CMAKE} OR NOT DEFINED CurrentDependenciesVersion OR NOT ${DependenciesVersion} STREQUAL ${CurrentDependenciesVersion})
+		if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${VCPKG_CMAKE} OR NOT DEFINED CACHE CurrentDependenciesVersion OR NOT ${DependenciesVersion} STREQUAL "${CurrentDependenciesVersion}")
 
 			include(cmake/InstallPackage.cmake)
 			INSTALL_VCPKG_PACKAGE(${DependenciesVersion})
