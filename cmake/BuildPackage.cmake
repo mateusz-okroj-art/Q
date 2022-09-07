@@ -37,7 +37,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		RESULT_VARIABLE result_process
 	)
 
-	if(NOT ${result_process} EQUAL 0)
+	if(NOT ${result_process} EQUAL "0")
 		message(FATAL_ERROR "Error while installing VCPKG.")
 	endif()
 
@@ -50,7 +50,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 			RESULT_VARIABLE result_process
 		)
 
-		if(NOT ${result_process} EQUAL 0)
+		if(NOT ${result_process} EQUAL "0")
 			message(FATAL_ERROR "Error while installing vcpkg - ${package_name}.")
 		endif()
 	endforeach()
