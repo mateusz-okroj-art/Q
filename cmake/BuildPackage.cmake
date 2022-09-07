@@ -37,10 +37,6 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		RESULT_VARIABLE result_process
 	)
 
-	if(NOT ${result_process} EQUAL "0")
-		message(FATAL_ERROR "Error while installing VCPKG.")
-	endif()
-
 	find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
 
 	foreach(package_name ${${vcpkg_libraries}})
