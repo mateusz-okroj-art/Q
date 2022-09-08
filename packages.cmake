@@ -1,6 +1,6 @@
 set(3rd_packages
-	gtest
 	qtbase
+	gtest
 	rtmidi
 	asiosdk
 )

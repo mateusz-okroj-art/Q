@@ -49,6 +49,8 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		if(NOT ${result_process} EQUAL "0")
 			message(FATAL_ERROR "Error while installing vcpkg - ${package_name}.")
 		endif()
+
+		execute_process(COMMAND ${vcpkg_app} update)
 	endforeach()
 
 	get_filename_component(vcpkg_app_dir ${vcpkg_app} DIRECTORY)

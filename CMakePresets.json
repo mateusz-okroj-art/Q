@@ -12,6 +12,7 @@
     },
     {
       "name": "base",
+      "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/out/build",
       "installDir": "${sourceDir}/out/install"
