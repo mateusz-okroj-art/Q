@@ -83,7 +83,7 @@ jobs:
           - name: Configure Mac OS
             if: matrix.runsOn == 'macOs-latest'
             shell: bash
-            run: brew install automake libtool autoconf-archive
+            run: brew install autoconf-archive autoconf automake bison cmake gettext gfortran gperf gtk-doc libtool meson mono nasm ninja pkg-config texinfo yasm
 
           - name: Configure VCPKG using CMake
             shell: sh
