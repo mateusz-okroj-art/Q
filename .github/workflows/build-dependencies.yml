@@ -75,6 +75,9 @@ jobs:
             # uses: seanmiddleditch/gha-setup-vsdevenv@adf16e54e207da0da148c8901a98a34d7aa3eb7a
             uses: seanmiddleditch/gha-setup-vsdevenv@v4
 
+          - name: Clone VCPKG
+            run: git clone "https://github.com/microsoft/vcpkg.git" out/install/vcpkg
+
           - name: Configure VCPKG using CMake
             shell: sh
             run: cmake --preset "install"
