@@ -86,7 +86,7 @@ jobs:
             run: |
               echo 'export PATH="/usr/local/opt/bison/bin:$PATH"' >> /Users/runner/.bash_profile
               echo 'export PATH="/usr/local/opt/texinfo/bin:$PATH"' >> /Users/runner/.bash_profile
-              brew install autoconf-archive autoconf automake bison cmake gettext gfortran gperf gtk-doc libtool meson nasm ninja pkg-config texinfo yasm
+              brew install autoconf-archive autoconf automake bison cmake gettext gfortran gperf gtk-doc libtool meson nasm ninja pkg-config mono texinfo yasm
 
           - name: Configure VCPKG using CMake
             shell: sh
