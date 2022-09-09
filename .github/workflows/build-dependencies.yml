@@ -76,7 +76,7 @@ jobs:
             uses: seanmiddleditch/gha-setup-vsdevenv@v4
 
           - name: Configure Linux
-            if: matrix.runsOn == "ubuntu-latest"
+            if: matrix.runsOn == 'ubuntu-latest'
             shell: bash
             run: sudo apt install autoconf-archive
 
