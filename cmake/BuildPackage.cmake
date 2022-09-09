@@ -18,7 +18,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 	execute_process(
 		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 		COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
-		VERBOSE
+		COMMAND_ECHO STDOUT
 	)
 
 	if(WIN32)
@@ -36,7 +36,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 	execute_process(
 		COMMAND ${VCPKG_START}
 		RESULT_VARIABLE result_process
-		VERBOSE
+		COMMAND_ECHO STDOUT
 	)
 
 	find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
@@ -46,7 +46,7 @@ function(Build_VCPKG_Package vcpkg_libraries)
 		execute_process(
 			COMMAND ${vcpkg_app} install ${package_name}
 			RESULT_VARIABLE result_process
-			VERBOSE
+			COMMAND_ECHO STDOUT
 		)
 
 		if(NOT ${result_process} EQUAL "0")
