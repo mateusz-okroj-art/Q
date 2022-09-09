@@ -56,6 +56,10 @@ jobs:
           - name: Git checkout
             uses: actions/checkout@v3
             
+          - name: ls
+            shell: bash
+            run: ls
+            
           - name: Remove cache
             shell: bash
             run: rm -r out
