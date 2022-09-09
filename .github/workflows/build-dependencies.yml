@@ -84,7 +84,7 @@ jobs:
             if: matrix.runsOn == 'macOs-latest'
             shell: bash
             run: |
-              sudo brew install autoconf
+              brew install autoconf
               sudo port install autoconf-archive
 
           - name: Configure VCPKG using CMake
