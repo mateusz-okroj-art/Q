@@ -55,6 +55,10 @@ jobs:
 
           - name: Git checkout
             uses: actions/checkout@v3
+            
+          - name: Remove cache
+            shell: bash
+            run: rm -r out
 
           - name: Install CMake
             # You may pin to the exact commit or the version.
