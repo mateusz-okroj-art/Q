@@ -79,6 +79,13 @@ jobs:
             if: matrix.runsOn == 'ubuntu-latest'
             shell: bash
             run: sudo apt install autoconf-archive
+            
+          - name: Configure Mac OS
+            if: matrix.runsOn == 'macOs-latest'
+            shell: bash
+            run: |
+              sudo brew install autoconf
+              sudo port install autoconf-archive
 
           - name: Configure VCPKG using CMake
             shell: sh
