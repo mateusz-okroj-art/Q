@@ -91,16 +91,15 @@ jobs:
           - name: Configure VCPKG using CMake
             id: configure
             shell: sh
-            continue-on-error: true
+            if: failure() || success()
             run: cmake --preset "install"
             
           - name: show error log
-            if: steps.configure.status == 'failure'
+            if: failure() || success()
             run: cat /usr/local/share/vcpkg/buildtrees/qtbase/config-x64-linux-out.log
             
           - name: Upload Release Asset
             id: upload-release-asset
-            if: steps.configure.status != 'failure'
             uses: actions/upload-release-asset@v1
             env:
               GITHUB_TOKEN: ${{ secrets.BUILD_DEPENDENCIES }}
