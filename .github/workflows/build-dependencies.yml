@@ -46,7 +46,7 @@ jobs:
 
         strategy:
           matrix:
-            runsOn: ['ubuntu-latest', 'windows-latest'] #, 'macOs-latest']
+            runsOn: ['ubuntu-latest'] #, 'windows-latest', 'macOs-latest']
 
         # The type of runner that the job will run on
         runs-on: ${{ matrix.runsOn }}
@@ -89,11 +89,18 @@ jobs:
               brew install autoconf-archive autoconf automake bison cmake gettext gfortran gperf gtk-doc libtool meson nasm ninja pkg-config mono texinfo yasm
 
           - name: Configure VCPKG using CMake
+            id: configure
             shell: sh
+            continue-on-error: true
             run: cmake --preset "install"
             
+          - name: show error log
+            if: steps.configure.status == 'failure'
+            run: cat /usr/local/share/vcpkg/buildtrees/qtbase/config-x64-linux-out.log
+            
           - name: Upload Release Asset
-            id: upload-release-asset 
+            id: upload-release-asset
+            if: steps.configure.status != 'failure'
             uses: actions/upload-release-asset@v1
             env:
               GITHUB_TOKEN: ${{ secrets.BUILD_DEPENDENCIES }}
