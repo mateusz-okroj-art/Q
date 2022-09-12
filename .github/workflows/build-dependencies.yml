@@ -46,7 +46,7 @@ jobs:
 
         strategy:
           matrix:
-            runsOn: ['ubuntu-latest', 'windows-latest', 'macOs-latest']
+            runsOn: ['ubuntu-latest', 'windows-latest'] #, 'macOs-latest']
 
         # The type of runner that the job will run on
         runs-on: ${{ matrix.runsOn }}
