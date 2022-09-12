@@ -78,7 +78,7 @@ jobs:
           - name: Configure Linux
             if: matrix.runsOn == 'ubuntu-latest'
             shell: bash
-            run: sudo apt install autoconf-archive
+            run: sudo apt install autoconf-archive libx11-xcb-dev
             
           - name: Configure Mac OS
             if: matrix.runsOn == 'macOs-latest'
