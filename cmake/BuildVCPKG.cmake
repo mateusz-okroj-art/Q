@@ -1,4 +1,4 @@
-function(Build_VCPKG_Package vcpkg_libraries)
+function(Build_VCPKG vcpkg_libraries)
 	list(LENGTH vcpkg_libraries list_length)
 
 	if(list_length EQUAL 0)
