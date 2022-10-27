@@ -61,7 +61,9 @@ jobs:
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
         
       - name: Install Qt
+        id: install_qt
         uses: jurplel/install-qt-action@v3
+        continue-on-error: true
         with:
           version: '6.2.*'
           #host: 'windows'
@@ -80,10 +82,17 @@ jobs:
           #aqtversion: '==2.1.*'
           #py7zrversion: '==0.19.*'
           extra: '--external 7z'
-        
+       
+      - name: Remove Qt dir, if error
+        if: steps.install_qt.conclusion == 'failure'
+        shell: sh
+        run: rm '${{ github.workspace }}/qt/'
+
       - name: Configure
+        if: steps.install_qt.conclusion != 'failure'
         run: cmake --preset x64-debug .
         
       - name: Build
+        if: steps.install_qt.conclusion != 'failure'
         working-directory: out/build
         run: cmake --build .
