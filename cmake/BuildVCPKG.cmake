@@ -10,34 +10,45 @@ function(Build_VCPKG vcpkg_libraries)
 	set(vcpkg_dir ${CMAKE_BINARY_DIR}/vcpkg)
 
 	if(IS_DIRECTORY vcpkg_dir)
-		file(REMOVE_RECURSE vcpkg_dir)
-	endif()
+		execute_process(
+			WORKING_DIRECTORY ${vcpkg_dir}
+			COMMAND Git pull
+		)
 
-	message(STATUS "Downloading VCPKG...")
+		find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
 
-	execute_process(
-		WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-		COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
-		COMMAND_ECHO STDOUT
-	)
-
-	if(WIN32)
-		if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-			set(VCPKG_START ${vcpkg_dir}/bootstrap-vcpkg.bat)
-		else()
-			message(FATAL_ERROR "Compiler must be a MSVC on Win32 platform.\nCurrently is '${CMAKE_CXX_COMPILER_ID}'.")
-		endif()
+		execute_process(
+			COMMAND ${vcpkg_app} update
+			RESULT_VARIABLE result_process
+			COMMAND_ECHO STDOUT
+		)
 	else()
-		set(VCPKG_START ${vcpkg_dir}/bootstrap-vcpkg.sh)
+		message(STATUS "Downloading VCPKG...")
+
+		execute_process(
+			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+			COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
+			COMMAND_ECHO STDOUT
+		)
+
+		if(WIN32)
+			if(${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+				set(VCPKG_START ${vcpkg_dir}/bootstrap-vcpkg.bat)
+			else()
+				message(FATAL_ERROR "Compiler must be a MSVC on Win32 platform.\nCurrently is '${CMAKE_CXX_COMPILER_ID}'.")
+			endif()
+		else()
+			set(VCPKG_START ${vcpkg_dir}/bootstrap-vcpkg.sh)
+		endif()
+
+		message(STATUS "Installing VCPKG...")
+
+		execute_process(
+			COMMAND ${VCPKG_START}
+			RESULT_VARIABLE result_process
+			COMMAND_ECHO STDOUT
+		)
 	endif()
-
-	message(STATUS "Installing VCPKG...")
-
-	execute_process(
-		COMMAND ${VCPKG_START}
-		RESULT_VARIABLE result_process
-		COMMAND_ECHO STDOUT
-	)
 
 	find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
 
@@ -52,23 +63,5 @@ function(Build_VCPKG vcpkg_libraries)
 		if(NOT ${result_process} EQUAL "0")
 			message(FATAL_ERROR "Error while installing vcpkg - ${package_name}.")
 		endif()
-
-		execute_process(COMMAND ${vcpkg_app} update)
 	endforeach()
-
-	get_filename_component(vcpkg_app_dir ${vcpkg_app} DIRECTORY)
-
-	message(STATUS "Removing Git repo dir.")
-
-	file(REMOVE_RECURSE ${vcpkg_app_dir}/.git)
-
-	file(GLOB_RECURSE paths ${vcpkg_app_dir}/*)
-
-	message(STATUS "Creating archive vcpkg.zip")
-
-	file(ARCHIVE_CREATE
-		OUTPUT ${CMAKE_CURRENT_LIST_DIR}/vcpkg.zip
-		PATHS ${paths}
-		FORMAT zip
-		VERBOSE)
 endfunction()
