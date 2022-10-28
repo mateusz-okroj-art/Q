@@ -53,6 +53,11 @@ function(Build_VCPKG vcpkg_libraries)
 
 	find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
 
+	execute_process(
+		COMMAND ${vcpkg_app} update
+		RESULT_VARIABLE result_process
+	)
+
 	foreach(package_name ${${vcpkg_libraries}})
 		message(STATUS "vcpkg: Installing ${package_name}...")
 		execute_process(
