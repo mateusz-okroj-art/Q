@@ -5,8 +5,6 @@ function(Build_VCPKG vcpkg_libraries)
 		message(FATAL_ERROR "Variable must be a non-empty list.")
 	endif()
 
-	find_program(Git NAMES git)
-
 	set(vcpkg_dir '${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg')
 
 	if(NOT IS_DIRECTORY ${vcpkg_dir})
@@ -15,10 +13,10 @@ function(Build_VCPKG vcpkg_libraries)
 		endif()
 	endif()
 
-	if(IS_DIRECTORY vcpkg_dir)
+	if(IS_DIRECTORY ${vcpkg_dir})
 		execute_process(
 			WORKING_DIRECTORY ${vcpkg_dir}
-			COMMAND Git pull
+			COMMAND git pull --progress
 		)
 
 		find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
@@ -32,7 +30,7 @@ function(Build_VCPKG vcpkg_libraries)
 
 		execute_process(
 			WORKING_DIRECTORY '${CMAKE_CURRENT_LIST_DIR}/out/build'
-			COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
+			COMMAND git clone --progress "https://github.com/microsoft/vcpkg.git"
 		)
 
 		if(WIN32)
