@@ -31,8 +31,8 @@ function(Build_VCPKG vcpkg_libraries)
 		message(STATUS "Downloading VCPKG...")
 
 		execute_process(
-			WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-			COMMAND Git clone "https://github.com/microsoft/vcpkg.git" '${vcpkg_dir}'
+			WORKING_DIRECTORY '${CMAKE_CURRENT_LIST_DIR}/out/build'
+			COMMAND Git clone "https://github.com/microsoft/vcpkg.git"
 		)
 
 		if(WIN32)
