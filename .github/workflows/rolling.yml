@@ -16,6 +16,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  qt_dir: '${{ github.workspace }}/qt/'
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
@@ -39,7 +42,7 @@ jobs:
         shell: bash
         run: |
           BRANCH=$GITHUB_REF
-          echo ::set-output name=branch_slug::${BRANCH////_}
+          echo "name=branch_slug::${BRANCH////_}" >> $GITHUB_OUTPUT
 
       - name: Cache
         uses: actions/cache@v3.0.8
@@ -69,7 +72,7 @@ jobs:
           #host: 'windows'
           target: 'desktop'
           #arch: 'win64_msvc2019_64'
-          dir: '${{ github.workspace }}/qt/'
+          dir: ${{ env.qt_dir }}
           install-deps: 'true'
           #modules: 'qtcore qtnetwork qtmultimedia qtserialport qtsvg'
           archives: 'qtbase qtsvg qtimageformats'
@@ -86,11 +89,11 @@ jobs:
       - name: Remove Qt dir, if error
         if: steps.install_qt.conclusion == 'failure'
         shell: sh
-        run: rm '${{ github.workspace }}/qt/'
+        run: rm '${{ env.qt_dir }}'
 
       - name: Configure
         if: steps.install_qt.conclusion != 'failure'
-        run: cmake --preset x64-debug .
+        run: cmake --preset x64-debug -DQT_PATH=${{ env.qt_dir }} .
         
       - name: Build
         if: steps.install_qt.conclusion != 'failure'
