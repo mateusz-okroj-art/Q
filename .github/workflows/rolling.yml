@@ -42,7 +42,7 @@ jobs:
         shell: bash
         run: |
           BRANCH=$GITHUB_REF
-          echo "name=branch_slug::${BRANCH////_}" >> $GITHUB_OUTPUT
+          echo "branch_slug=${BRANCH////_}" >> $GITHUB_OUTPUT
 
       - name: Cache
         uses: actions/cache@v3.0.8
