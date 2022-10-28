@@ -9,6 +9,12 @@ function(Build_VCPKG vcpkg_libraries)
 
 	set(vcpkg_dir '${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg')
 
+	if(NOT IS_DIRECTORY ${vcpkg_dir})
+		if(IS_DIRECTORY '/usr/local/share/vcpkg')
+			set(vcpkg_dir '/usr/local/share/vcpkg')
+		endif()
+	endif()
+
 	if(IS_DIRECTORY vcpkg_dir)
 		execute_process(
 			WORKING_DIRECTORY ${vcpkg_dir}
