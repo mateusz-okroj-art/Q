@@ -35,7 +35,8 @@ jobs:
     steps:
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
+      - name: Git checkout
+        uses: actions/checkout@v3
 
       - name: Get branch name
         id: branch_name
@@ -74,8 +75,8 @@ jobs:
           install-deps: 'true'
           #modules: 'qtcore qtnetwork qtmultimedia qtserialport qtsvg'
           archives: 'qtbase qtsvg qtimageformats'
-          cache: 'false'
-          cache-key-prefix: 'install-qt-action'
+          cache: 'true'
+          cache-key-prefix: 'install-qt-action-${{ matrix.runsOn }}'
           setup-python: 'true'
           tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
           set-env: 'true'
