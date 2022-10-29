@@ -19,7 +19,7 @@ jobs:
 
   # This workflow contains a single job called "build"
   build:
-  
+
     strategy:
       matrix:
         runsOn: [ "ubuntu-latest", "windows-latest", "macOs-latest" ]
@@ -39,10 +39,25 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v3
 
+      - name: Get branch name
+        id: branch_name
+        shell: bash
+        run: |
+          BRANCH=$GITHUB_REF
+          echo "branch_slug=${BRANCH////_}" >> $GITHUB_OUTPUT
+
+      - name: Cache
+        uses: actions/cache@v3.0.8
+        with:
+          # A list of files, directories, and wildcard patterns to cache and restore
+          path: out/build/*
+          # An explicit key for restoring and saving the cache
+          key: RollingBuildCI-${{ matrix.runsOn }}-${{ steps.branch_name.outputs.branch_slug }}
+          
       - name: Install CMake
         # You may pin to the exact commit or the version.
         # uses: lukka/get-cmake@2e45cd82cd67abcfd1b61fb17c253b99f8257189
-        uses: lukka/get-cmake@v3.21.2
+        uses: lukka/get-cmake@latest
 
       - name: Setup VS Dev Environment
         if: matrix.runsOn == 'windows-latest'
@@ -50,6 +65,36 @@ jobs:
         # uses: seanmiddleditch/gha-setup-vsdevenv@adf16e54e207da0da148c8901a98a34d7aa3eb7a
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
         
+      - name: Install Qt
+        id: install_qt
+        uses: jurplel/install-qt-action@v3
+        continue-on-error: true
+        with:
+          version: '6.2.*'
+          target: 'desktop'
+          dir: ${{ env.qt_dir }}
+          install-deps: 'true'
+          #modules: 'qtcore qtnetwork qtmultimedia qtserialport qtsvg'
+          archives: 'qtbase qtsvg qtimageformats'
+          cache: 'false'
+          #cache-key-prefix: 'install-qt-action-${{ matrix.runsOn }}'
+          setup-python: 'true'
+          tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
+          set-env: 'true'
+          tools-only: 'false'
+          #aqtversion: '==2.1.*'
+          #py7zrversion: '==0.19.*'
+          extra: '--external 7z'
+       
+      - name: Remove Qt dir, if error
+        if: steps.install_qt.conclusion == 'failure'
+        shell: sh
+        run: rm '${{ env.qt_dir }}'
+
+      - name: Configure
+        if: steps.install_qt.conclusion != 'failure'
+        run: cmake --preset x64-release -DQT_PATH="${{ env.qt_dir }}" .
+
       - name: Set up JDK 11
         if: matrix.runsOn == 'windows-latest'
         uses: actions/setup-java@v1
@@ -65,7 +110,7 @@ jobs:
           curl -sSLo $HOME\.sonar\sonar-scanner.zip ${{ env.SONAR_SCANNER_DOWNLOAD_URL }}
           unzip -o $HOME\.sonar\sonar-scanner.zip -d $HOME\.sonar\
           echo "$HOME\.sonar\sonar-scanner-${{ env.SONAR_SCANNER_VERSION }}-windows\bin" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
-      
+
       - name: Configure Sonar BuildWrapper
         if: matrix.runsOn == 'windows-latest'
         env:
@@ -74,23 +119,25 @@ jobs:
           curl -sSLo $HOME\.sonar\build-wrapper.zip ${{ env.BUILD_WRAPPER_DOWNLOAD_URL }}
           unzip -o $HOME\.sonar\build-wrapper.zip -d $HOME\.sonar\
           echo "$HOME\.sonar\build-wrapper-win-x86" | Out-File -Append -FilePath $env:GITHUB_PATH -Encoding utf8
-          
+
       - name: Configure CMake
         run: cmake --preset x64-debug .
-          
+
       - name: Build & Test with Sonar BuildWrapper
         if: matrix.runsOn == 'windows-latest'
         run: |
           build-wrapper-win-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build out/build && ctest out/build
-      
+
       - name: Build
-        if: matrix.runsOn != 'windows-latest'
-        run: cmake --build out/build
-      
+        if: steps.install_qt.conclusion != 'failure'
+        working-directory: out/build
+        run: cmake --build .
+
       - name: Test
         if: matrix.runsOn != 'windows-latest'
-        run: ctest out/build
-      
+        working-directory: out/build
+        run: ctest .
+
       - name: Run SonarScanner
         if: matrix.runsOn == 'windows-latest'
         env:
