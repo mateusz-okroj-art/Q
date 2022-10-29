@@ -6,7 +6,7 @@ project(Root)
 		set(QT_PATH "C:/Qt/")
 	endif()
 
-	if(NOT EXISTS ${QT_PATH})
+	if(EXISTS ${QT_PATH})
 		message(FATAL_ERROR "Qt 6 not found.")
 	endif()
 
@@ -35,7 +35,13 @@ project(Root)
 
 	set(CMAKE_CXX_STANDARD 20)
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
+	
+	add_library(asiosdk INTERFACE)
+	target_include_directories(asiosdk INTERFACE "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/asiosdk_${triplet}/include/")
+	set(rtmidi_DIR "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/rtmidi_${triplet}/share/rtmidi/")
 
+	find_package(GTest CONFIG REQUIRED)
+	find_package(rtmidi CONFIG REQUIRED)
 	find_package(Qt6 REQUIRED COMPONENTS Core)
 
 	# Fix GTest

@@ -58,12 +58,38 @@ function(Build_VCPKG vcpkg_libraries)
 		COMMAND ./vcpkg update
 	)
 
+	if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+		if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x64")
+			set(triplet "x64-windows")
+		elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "i686")
+			set(triplet "x86-windows")
+		elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+			set(triplet "arm64-windows")
+		else()
+			message(FATAL_ERROR "Unsupported architecture '${CMAKE_HOST_SYSTEM_PROCESSOR}'.")
+		endif()
+	elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+		if(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "AMD64" OR CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x64")
+			set(triplet "x64-linux")
+		elseif(CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "i686")
+			set(triplet "x86-linux")
+		elseif(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+			set(triplet "arm64-linux")
+		else()
+			message(FATAL_ERROR "Unsupported architecture '${CMAKE_HOST_SYSTEM_PROCESSOR}'.")
+		endif()
+	elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+		set(triplet "x64-osx")
+	else()
+		message(FATAL_ERROR "Unsupported OS.")
+	endif()
+
 	foreach(package_name ${${vcpkg_libraries}})
 		message(STATUS "vcpkg: Installing '${package_name}'...")
 
 		execute_process(
 			WORKING_DIRECTORY ${vcpkg_dir}
-			COMMAND ./vcpkg install "${package_name}"
+			COMMAND ./vcpkg install "${package_name}" --triplet=${triplet}
 			RESULT_VARIABLE result_process
 		)
 
@@ -71,4 +97,6 @@ function(Build_VCPKG vcpkg_libraries)
 			message(FATAL_ERROR "Error while installing vcpkg - ${package_name}.")
 		endif()
 	endforeach()
+
+	set(triplet ${triplet} PARENT_SCOPE)
 endfunction()
