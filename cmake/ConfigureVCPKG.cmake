@@ -64,7 +64,12 @@ function(Build_VCPKG vcpkg_libraries)
 		endif()
 	endif()
 
-	find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
+	find_program(
+		vcpkg_app
+		NAMES vcpkg
+		PATHS ${vcpkg_dir}
+		NO_DEFAULT_PATH
+        NO_CMAKE_PATH)
 
 	execute_process(
 		COMMAND ${vcpkg_app} update
