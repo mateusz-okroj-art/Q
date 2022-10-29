@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 env:
-  qt_dir: '${{ github.workspace }}out/build/qt/'
+  qt_dir: '${{ github.workspace }}/out/build/qt'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -69,9 +69,7 @@ jobs:
         continue-on-error: true
         with:
           version: '6.2.*'
-          #host: 'windows'
           target: 'desktop'
-          #arch: 'win64_msvc2019_64'
           dir: ${{ env.qt_dir }}
           install-deps: 'true'
           #modules: 'qtcore qtnetwork qtmultimedia qtserialport qtsvg'
