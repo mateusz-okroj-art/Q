@@ -2,15 +2,6 @@
   "version": 3,
   "configurePresets": [
     {
-      "name": "install",
-      "displayName": "Install VCPKG packages",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/out/install",
-      "cacheVariables": {
-        "MODE": "install"
-      }
-    },
-    {
       "name": "base",
       "hidden": true,
       "generator": "Ninja",
