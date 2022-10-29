@@ -6,7 +6,7 @@ project(Root)
 		set(QT_PATH "C:/Qt/")
 	endif()
 
-	if(EXISTS ${QT_PATH})
+	if(NOT EXISTS ${QT_PATH})
 		message(FATAL_ERROR "Qt 6 not found.")
 	endif()
 
