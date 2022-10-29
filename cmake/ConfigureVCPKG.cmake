@@ -18,17 +18,6 @@ function(Build_VCPKG vcpkg_libraries)
 			WORKING_DIRECTORY ${vcpkg_dir}
 			COMMAND ${Git} pull --progress
 		)
-
-		find_program(vcpkg_app NAMES vcpkg HINTS ${vcpkg_dir})
-
-		execute_process(
-			COMMAND ${vcpkg_app} update
-			RESULT_VARIABLE result_process
-		)
-
-		if(NOT ${result_process} EQUAL "0")
-			message(FATAL_ERROR "Error while updating VCPKG.")
-		endif()
 	else()
 		message(STATUS "Downloading VCPKG...")
 
@@ -64,27 +53,17 @@ function(Build_VCPKG vcpkg_libraries)
 		endif()
 	endif()
 
-	find_program(
-		vcpkg_app
-		NAMES vcpkg
-		PATHS ${vcpkg_dir}
-		NO_DEFAULT_PATH
-        NO_CMAKE_PATH)
-
 	execute_process(
-		COMMAND ${vcpkg_app} update
-		RESULT_VARIABLE result_process
+		WORKING_DIRECTORY ${vcpkg_dir}
+		COMMAND ./vcpkg update
 	)
-
-	if(NOT ${result_process} EQUAL "0")
-		message(FATAL_ERROR "Error while updating VCPKG.")
-	endif()
 
 	foreach(package_name ${${vcpkg_libraries}})
 		message(STATUS "vcpkg: Installing '${package_name}'...")
 
 		execute_process(
-			COMMAND ${vcpkg_app} install ${package_name}
+			WORKING_DIRECTORY ${vcpkg_dir}
+			COMMAND ./vcpkg install "${package_name}"
 			RESULT_VARIABLE result_process
 		)
 
