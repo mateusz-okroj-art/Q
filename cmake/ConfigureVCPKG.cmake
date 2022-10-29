@@ -88,16 +88,3 @@ function(Build_VCPKG vcpkg_libraries)
 		endif()
 	endforeach()
 endfunction()
-
-function(ConfigureToolchainPath)
-	if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/scripts/buildsystems/vcpkg.cmake")
-		set(
-			CMAKE_TOOLCHAIN_FILE
-			"${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/scripts/buildsystems/vcpkg.cmake"
-			PARENT_SCOPE)
-
-		message("Toolchain path was set to: ${CMAKE_TOOLCHAIN_FILE}.")
-	else()
-		message(FATAL_ERROR "Not found vcpkg.cmake.")
-	endif()
-endfunction()
