@@ -1,5 +1,10 @@
 set(3rd_packages
 	gtest
-	qtbase
 	rtmidi
 )
+
+if(DEFINED WIN32)
+	list(APPEND 3rd_packages
+		asiosdk
+	)
+endif()

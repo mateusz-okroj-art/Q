@@ -2,45 +2,51 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Root)
 
-if(DEFINED MODE AND MODE STREQUAL "install")
+	if(DEFINED WIN32 AND (NOT DEFINED QT_PATH OR NOT EXISTS ${QT_PATH}))
+		set(QT_PATH "C:/Qt/")
+	endif()
 
-	include(packages.cake)
-	include(cmake/BuildPackage.cmake)
+	if(NOT EXISTS ${QT_PATH})
+		message(FATAL_ERROR "Qt 6 not found.")
+	endif()
 
-	BUILD_VCPKG_PACKAGE(${3rd_packages})
+	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-else()
+	set(CMAKE_AUTOMOC ON)
+	set(CMAKE_AUTORCC ON)
+	set(CMAKE_AUTOUIC ON)
 
-	include(cmake/GetDependenciesVersion.cmake)
-	GETDEPENDENCIESVERSION(DependenciesVersion)
+	list(APPEND CMAKE_PREFIX_PATH ${QT_PATH})
 
-	if(DEFINED DependenciesVersion AND NOT ${DependenciesVersion} STREQUAL "null")
+	include(cmake/ConfigureVCPKG.cmake)
+	include(packages.cmake)
 
-		message("Required dependencies version is: ${DependenciesVersion}")
-		message("Current dependencies version is: ${CurrentDependenciesVersion}")
-
-		set(VCPKG_CMAKE .vcpkg/scripts/buildsystems/vcpkg.cmake)
-
-		if(NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${VCPKG_CMAKE} OR NOT DEFINED CurrentDependenciesVersion OR NOT ${DependenciesVersion} STREQUAL ${CurrentDependenciesVersion})
-
-			include(cmake/InstallPackage.cmake)
-			INSTALL_VCPKG_PACKAGE(${DependenciesVersion})
-
-			set(CurrentDependenciesVersion ${DependenciesVersion} CACHE INTERNAL "Current dependencies version installed on cache." FORCE)
-
-		endif()
+	BUILD_VCPKG(3rd_packages)
 	
-		include(${VCPKG_CMAKE})
+	if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/scripts/buildsystems/vcpkg.cmake")
+		set(
+			CMAKE_TOOLCHAIN_FILE
+			"${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/scripts/buildsystems/vcpkg.cmake")
 
+		message("Toolchain path was set to: ${CMAKE_TOOLCHAIN_FILE}.")
+	else()
+		message(FATAL_ERROR "Not found vcpkg.cmake.")
 	endif()
 
 	set(CMAKE_CXX_STANDARD 20)
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
+	
+	add_library(asiosdk INTERFACE)
+	target_include_directories(asiosdk INTERFACE "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/asiosdk_${triplet}/include/")
+	set(rtmidi_DIR "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/rtmidi_${triplet}/share/rtmidi/")
+	list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/")
+
+	find_package(GTest CONFIG REQUIRED)
+	find_package(rtmidi CONFIG REQUIRED)
+	find_package(Qt6 REQUIRED COMPONENTS Core)
 
 	# Fix GTest
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 	add_subdirectory(libs)
 	add_subdirectory(app)
-
-endif()
