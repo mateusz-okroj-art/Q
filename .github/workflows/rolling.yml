@@ -70,8 +70,9 @@ jobs:
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
 
       - name: Remove Qt dir
+        continue-on-error: true
         shell: bash
-        run: rm '${{ env.qt_dir }}'
+        run: rm -r '${{ env.qt_dir }}/'
 
       - name: Install Qt
         id: install_qt
