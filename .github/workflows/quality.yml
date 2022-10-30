@@ -39,6 +39,10 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v3
 
+      - name: Remove CMake cache dir
+        shell: bash
+        run: rm out/
+
       - name: Get branch name
         id: branch_name
         shell: bash
@@ -46,14 +50,6 @@ jobs:
           BRANCH=$GITHUB_REF
           echo "branch_slug=${BRANCH////_}" >> $GITHUB_OUTPUT
 
-      - name: Cache
-        uses: actions/cache@v3.0.8
-        with:
-          # A list of files, directories, and wildcard patterns to cache and restore
-          path: out/build/*
-          # An explicit key for restoring and saving the cache
-          key: RollingBuildCI-${{ matrix.runsOn }}-${{ steps.branch_name.outputs.branch_slug }}
-          
       - name: Install CMake
         # You may pin to the exact commit or the version.
         # uses: lukka/get-cmake@2e45cd82cd67abcfd1b61fb17c253b99f8257189
@@ -64,7 +60,7 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: seanmiddleditch/gha-setup-vsdevenv@adf16e54e207da0da148c8901a98a34d7aa3eb7a
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
-        
+
       - name: Install Qt
         id: install_qt
         uses: jurplel/install-qt-action@v3
@@ -85,11 +81,6 @@ jobs:
           #aqtversion: '==2.1.*'
           #py7zrversion: '==0.19.*'
           extra: '--external 7z'
-       
-      - name: Remove Qt dir, if error
-        if: steps.install_qt.conclusion == 'failure'
-        shell: sh
-        run: rm '${{ env.qt_dir }}'
 
       - name: Configure
         if: steps.install_qt.conclusion != 'failure'
@@ -129,7 +120,7 @@ jobs:
           build-wrapper-win-x86-64 --out-dir ${{ env.BUILD_WRAPPER_OUT_DIR }} cmake --build out/build && ctest out/build
 
       - name: Build
-        if: steps.install_qt.conclusion != 'failure'
+        if: matrix.runsOn != 'windows-latest'
         working-directory: out/build
         run: cmake --build .
 
