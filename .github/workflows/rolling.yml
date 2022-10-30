@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 env:
-  qt_dir: '${{ github.workspace }}/out/build/qt'
+  qt_dir: '/qt'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
