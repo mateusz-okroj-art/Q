@@ -2,12 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(Root)
 
-	if(DEFINED WIN32 AND (NOT DEFINED QT_PATH OR NOT EXISTS ${QT_PATH}))
-		set(QT_PATH "C:/Qt/")
-	endif()
-
-	if(NOT EXISTS ${QT_PATH})
-		message(FATAL_ERROR "Qt 6 not found.")
+	if(DEFINED QT_PATH AND EXISTS ${QT_PATH})
+		list(APPEND CMAKE_PREFIX_PATH ${QT_PATH})
 	endif()
 
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -15,8 +11,6 @@ project(Root)
 	set(CMAKE_AUTOMOC ON)
 	set(CMAKE_AUTORCC ON)
 	set(CMAKE_AUTOUIC ON)
-
-	list(APPEND CMAKE_PREFIX_PATH ${QT_PATH})
 
 	include(cmake/ConfigureVCPKG.cmake)
 	include(packages.cmake)
@@ -43,6 +37,7 @@ project(Root)
 
 	find_package(GTest CONFIG REQUIRED)
 	find_package(rtmidi CONFIG REQUIRED)
+	find_package(rxcpp CONFIG REQUIRED)
 	find_package(Qt6 REQUIRED COMPONENTS Core)
 
 	# Fix GTest
