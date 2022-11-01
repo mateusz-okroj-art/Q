@@ -1,5 +1,6 @@
 set(3rd_packages
 	rxcpp
+	rxqt
 	gtest
 	rtmidi
 )
