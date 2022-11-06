@@ -98,5 +98,5 @@ function(Build_VCPKG vcpkg_libraries)
 		endif()
 	endforeach()
 
-	set(triplet ${triplet} PARENT_SCOPE)
+	set(triplet ${triplet} CACHE STRING "")
 endfunction()

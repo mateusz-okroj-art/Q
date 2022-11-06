@@ -30,20 +30,8 @@ project(Root)
 	set(CMAKE_CXX_STANDARD 20)
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 	
-	add_library(asiosdk INTERFACE)
-	target_include_directories(asiosdk INTERFACE "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/asiosdk_${triplet}/include/")
-	
-	set(rtmidi_DIR "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/rtmidi_${triplet}/share/rtmidi/")
-	list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/")
-
-	find_package(GTest CONFIG REQUIRED)
-	find_package(rtmidi CONFIG REQUIRED)
-	find_package(rxcpp CONFIG REQUIRED)
-
-	add_library(rxqt INTERFACE)
-	target_include_directories(rxqt INTERFACE "${CMAKE_CURRENT_LIST_DIR}/out/build/vcpkg/packages/asiosdk_${triplet}/include/")
-	
-	find_package(Qt6 REQUIRED COMPONENTS Core)
+	include(cmake/ConfigureLibraries.cmake)
+	CONFIGURELIBRARIES(${CMAKE_CURRENT_LIST_DIR} ${triplet})
 
 	# Fix GTest
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)

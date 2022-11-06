@@ -3,6 +3,7 @@ set(3rd_packages
 	rxqt
 	gtest
 	rtmidi
+	libbson
 )
 
 if(DEFINED WIN32)
