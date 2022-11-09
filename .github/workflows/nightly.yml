@@ -68,8 +68,6 @@ jobs:
         # uses: lukka/get-cmake@2e45cd82cd67abcfd1b61fb17c253b99f8257189
         uses: lukka/get-cmake@latest
 
-
-
       - name: Setup VS Dev Environment
         if: matrix.runsOn == 'windows-latest'
         # You may pin to the exact commit or the version.
