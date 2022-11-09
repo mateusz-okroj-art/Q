@@ -46,6 +46,15 @@ jobs:
       - name: Git checkout
         uses: actions/checkout@v3
 
+      - name: Remove old build cache
+        shell: bash
+        run: |
+          if [[ -d "out" ]]
+          then
+            rm -r "out"
+          else
+            exit 0
+
       - name: Get branch name
         id: branch_name
         shell: bash
