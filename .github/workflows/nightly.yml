@@ -49,9 +49,9 @@ jobs:
       - name: Remove old build cache
         shell: bash
         run: |
-          if [[ -d "out" ]]
+          if [[ -d '${{ github.workspace }}/out' ]]
           then
-            rm -r "out"
+            rm -r '${{ github.workspace }}/out'
           else
             exit 0
           fi
@@ -84,16 +84,11 @@ jobs:
           install-deps: 'true'
           #modules: 'qtcore qtnetwork qtmultimedia qtserialport qtsvg'
           archives: 'qtbase qtsvg qtimageformats'
-          cache: 'false'
-          #cache-key-prefix: 'install-qt-action-${{ matrix.runsOn }}'
+          cache: false
           setup-python: 'true'
-          tools: 'tools_ifw tools_qtcreator,qt.tools.qtcreator'
           set-env: 'true'
-          tools-only: 'false'
-          #aqtversion: '==2.1.*'
-          #py7zrversion: '==0.19.*'
           extra: '--external 7z'
-
+          
       - name: Configure
         if: steps.install_qt.conclusion != 'failure'
         run: cmake --preset x64-release -DQT_PATH="${{ env.qt_dir }}" .
