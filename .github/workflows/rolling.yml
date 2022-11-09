@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
 
 env:
-  qt_dir: '${{ github.workspace }}/out/qt'
+  qt_dir: '${{ runner.temp }}'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -63,16 +63,6 @@ jobs:
         # You may pin to the exact commit or the version.
         # uses: seanmiddleditch/gha-setup-vsdevenv@adf16e54e207da0da148c8901a98a34d7aa3eb7a
         uses: seanmiddleditch/gha-setup-vsdevenv@v4
-
-      - name: Remove Qt dir
-        shell: bash
-        run: |
-          if [[ -d '${{ github.workspace }}/out/build/qt' ]]
-          then
-            rm -r '${{ github.workspace }}/out/build/qt'
-          else
-            exit 0
-          fi
 
       - name: Install Qt
         id: install_qt
