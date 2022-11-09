@@ -54,6 +54,7 @@ jobs:
             rm -r "out"
           else
             exit 0
+          fi
 
       - name: Get branch name
         id: branch_name
