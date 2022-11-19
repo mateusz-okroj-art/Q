@@ -6,12 +6,12 @@ name: Rolling build
 on:
   
   push:
-    branches: [ main, feature/*, fix/*, release/* ]
-    paths-ignore: ['.github/workflows/nightly.yml', '.github/workflows/quality.yml', '.github/workflows/build-dependencies.yml']
+    branches: [ feature/*, fix/*, release/* ]
+    paths-ignore: ['.github/workflows/nightly.yml', '.github/workflows/quality.yml']
     
   pull_request:
     branches-ignore: [ main, feature/*, fix/*, release/* ]
-    paths-ignore: ['.github/workflows/nightly.yml', '.github/workflows/quality.yml', '.github/workflows/build-dependencies.yml']
+    paths-ignore: ['.github/workflows/nightly.yml', '.github/workflows/quality.yml']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
