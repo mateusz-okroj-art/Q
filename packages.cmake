@@ -3,7 +3,7 @@ set(3rd_packages
 	rxqt
 	gtest
 	rtmidi
-	libbson
+	mongo-c-driver
 )
 
 if(DEFINED WIN32)
