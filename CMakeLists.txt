@@ -11,6 +11,7 @@ project(Root)
 	include(cmake/ConfigureVCPKG.cmake)
 	include(cmake/QSharedLibrary.cmake)
 	include(packages.cmake)
+	include(GenerateExportHeader)
 
 	BUILD_VCPKG(3rd_packages)
 	
@@ -33,5 +34,8 @@ project(Root)
 	# Fix GTest
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-	add_subdirectory(libs)
+	add_subdirectory(Core/ProjectIO)
+
+	add_subdirectory(Packages/Project)
+
 	add_subdirectory(app)
