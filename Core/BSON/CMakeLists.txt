@@ -1,7 +1,7 @@
-project(Q.Core.ProjectIO)
+project(Q.Core.BSON)
 
 set(SOURCES
-	serializer.cpp
+	bson.cpp
 )
 
 add_library(
@@ -13,11 +13,11 @@ add_library(
 		${PROJECT_NAME}
 		PUBLIC ${CMAKE_BINARY_DIR}/exports
 		PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
-		PUBLIC_HEADER ProjectIO_Serializer.h
+		PUBLIC_HEADER Core_BSONDocument.h
 	)
 
 	generate_export_header(${PROJECT_NAME}
-		EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/exports/QCoreProjectIOExport.h
+		EXPORT_FILE_NAME ${CMAKE_BINARY_DIR}/exports/QCoreBSONExport.h
 	)
 
 	include(GNUInstallDirs)
