@@ -10,6 +10,7 @@ on:
     
   pull_request:
     branches: [ main, release/* ]
+    paths-ignore: ['.github/workflows/rolling.yml', '.github/workflows/nightly.yml']
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -18,7 +19,7 @@ on:
 jobs:
 
   # This workflow contains a single job called "build"
-  build:
+  qualityGate-build:
 
     strategy:
       matrix:
