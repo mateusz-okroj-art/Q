@@ -8,11 +8,8 @@ project(Root)
 
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-	set(CMAKE_AUTOMOC ON)
-	set(CMAKE_AUTORCC ON)
-	set(CMAKE_AUTOUIC ON)
-
 	include(cmake/ConfigureVCPKG.cmake)
+	include(cmake/QSharedLibrary.cmake)
 	include(packages.cmake)
 
 	BUILD_VCPKG(3rd_packages)
