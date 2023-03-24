@@ -1,3 +1,19 @@
+function(ConfigurePlatform platform_name)
+	file()
+	
+	if(${platform_id} equal "x64-windows")
+		
+	elseif(${platform_id} equal "x64-linux")
+
+	elseif(${platform_id} equal "x64-macosx")
+
+	else()
+		message(FATAL_ERROR "Configure VCPKG: Unsupported platform.")
+	endif()
+function(ConfigureVCPKG)
+	
+endfunction()
+
 function(Build_VCPKG vcpkg_libraries)
 	list(LENGTH vcpkg_libraries list_length)
 

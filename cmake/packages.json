@@ -1,0 +1,64 @@
+[
+	{
+		"platform": "all",
+		"packages": [
+			{
+				"name": "qtbase",
+				"version": "6.3.2"
+			},
+			/*{
+				"name": "qtdeclarative",
+				"version": "6.3.2"
+			},
+			{
+				"name": "qtmultimedia",
+				"version": "6.3.2"
+			},
+			{
+				"name": "qtimageformats",
+				"version": "6.3.2"
+			},
+			{
+				"name": "qtserialport",
+				"version": "6.3.2"
+			},*/
+			{
+				"name": "gtest",
+				"version": "1.12.1"
+			},
+			{
+				"name": "rtmidi",
+				"version": "5.0.0"
+			},
+			{
+				"name": "rxcpp",
+				"version": "4.1.1"
+			},
+			{
+				"name": "rxqt",
+				"version": "bb2138c"
+			},
+			{
+				"name": "libbson",
+				"version": "1.17.6"
+			}
+		]
+	},
+	{
+		"platform": "Windows",
+		"packages": [
+			{
+				"name": "asiosdk",
+				"version": "2.3.3"
+			}
+		]
+	},
+	{
+		"platform": "Linux",
+		"commandline": ""
+	},
+	{
+		"platform": "Darwin",
+		"commandline": ""
+	}
+]
