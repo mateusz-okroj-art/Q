@@ -41,6 +41,8 @@ function(Q_SharedLibrary ENABLE_QT)
 		${PROJECT_NAME}
 		PUBLIC ${CMAKE_BINARY_DIR}/exports
 		PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}
+		${_public_libs}
+		${_private_libs}
 		${_public_headers}
 	)
 
