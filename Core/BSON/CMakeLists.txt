@@ -1,7 +1,7 @@
 project(Q.Core.BSON)
 
 set(SOURCES
-	bson.cpp
+	bson_document.cpp
 )
 
 add_library(

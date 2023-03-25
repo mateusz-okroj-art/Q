@@ -35,6 +35,7 @@ project(Root)
 	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 	add_subdirectory(Core/BSON)
+	add_subdirectory(Core/Filesystem)
 	add_subdirectory(Core/ProjectIO)
 
 	add_subdirectory(Packages/Project)
