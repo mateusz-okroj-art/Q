@@ -40,6 +40,4 @@ cmake_minimum_required(VERSION 3.16)
 
 include(cmake/ConfigureVCPKG.cmake)
 
-READVCPKGCONFIGURATIONFILE(json_config_str)
-
-print(${json_config_str})
+CONFIGUREVCPKG()

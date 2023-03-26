@@ -1,17 +1,51 @@
 function(ReadVCPKGConfigurationFile variable_name)
-	
+	file(READ ${CMAKE_CURRENT_FUNCTION_LIST_DIR}/packages.json file_str)
+
+	if(NOT DEFINED file_str OR ${file_str} EQUAL "")
+		message(FATAL_ERROR "Packages list not found.")
+	endif()
+
+	set(${variable_name} ${file_str} PARENT_SCOPE)
 endfunction()
 
 function(ConfigurePlatform platform_name)	
-	if(${platform_id} equal "x64-windows")
+	if(${platform_name} equal "Windows")
 		
-	elseif(${platform_id} equal "x64-linux")
+	elseif(${platform_name} equal "Linux")
 
-	elseif(${platform_id} equal "x64-macosx")
+	elseif(${platform_name} equal "Darwin")
 
 	else()
 		message(FATAL_ERROR "Configure VCPKG: Unsupported platform.")
 	endif()
+endfunction()
+
+function(GetVCPKGPath variable_name)
+	find_program(VCPKG NAMES vcpkg)
+
+	if(NOT EXISTS ${VCPKG})
+		message(FATAL_ERROR "VCPKG not found. Set valid path to PATH system environment variable.")
+	endif()
+
+	set(${variable_name} ${VCPKG} PARENT_SCOPE)
+endfunction()
+
+function(ConfigureVCPKG)
+	GetVCPKGPath(vcpkg_app)
+	get_filename_component(vcpkg_dir ${vcpkg_app} DIRECTORY)
+
+	message(STATUS "Found VCPKG: ${vcpkg_app}")
+
+	find_program(git NAMES git)
+
+	message(STATUS "Updating VCPKG...")
+
+	execute_process(
+		WORKING_DIRECTORY ${vcpkg_dir}
+		COMMAND git pull -r
+	)
+
+	execute_process(COMMAND ${vcpkg_app} update)
 endfunction()
 
 function(Build_VCPKG vcpkg_libraries)
