@@ -15,13 +15,13 @@ function(ConfigurePlatform json_file platform_name)
 		message(STATUS "Updating APT...")
 
 		execute_process(
-			COMMAND apt update
+			COMMAND sudo apt update
 		)
 
 		message(STATUS "Upgrading APT packages...")
 
 		execute_process(
-			COMMAND apt upgrade
+			COMMAND sudo apt upgrade
 		)
 
 		execute_process(
@@ -34,8 +34,11 @@ function(ConfigurePlatform json_file platform_name)
 		string(JSON arr_len LENGTH ${json_file})
 
 		foreach(i RANGE 0 ${arr_len})
+			message(${i})
 			string(JSON platform_description GET ${json_file} ${i})
+			message(${platform_description})
 			string(JSON name GET ${platform_description} platform)
+			message(${name})
 
 			if(${name} STREQUAL ${platform_name})
 				string(JSON apt_required_packages GET ${json_file} apt-packages)
