@@ -1,12 +1,12 @@
 [
-	{
-		"platform": "all",
-		"packages": [
-			{
-				"name": "qtbase",
-				"version": "6.3.2"
-			},
-			/*{
+  {
+    "platform": "all",
+    "packages": [
+      {
+        "name": "qtbase",
+        "version": "6.3.2"
+      },
+      /*{
 				"name": "qtdeclarative",
 				"version": "6.3.2"
 			},
@@ -22,43 +22,84 @@
 				"name": "qtserialport",
 				"version": "6.3.2"
 			},*/
-			{
-				"name": "gtest",
-				"version": "1.12.1"
-			},
-			{
-				"name": "rtmidi",
-				"version": "5.0.0"
-			},
-			{
-				"name": "rxcpp",
-				"version": "4.1.1"
-			},
-			{
-				"name": "rxqt",
-				"version": "bb2138c"
-			},
-			{
-				"name": "libbson",
-				"version": "1.17.6"
-			}
-		]
-	},
-	{
-		"platform": "Windows",
-		"packages": [
-			{
-				"name": "asiosdk",
-				"version": "2.3.3"
-			}
-		]
-	},
-	{
-		"platform": "Linux",
-		"commandline": ""
-	},
-	{
-		"platform": "Darwin",
-		"commandline": ""
-	}
+      {
+        "name": "gtest",
+        "version": "1.12.1"
+      },
+      {
+        "name": "rtmidi",
+        "version": "5.0.0"
+      },
+      {
+        "name": "rxcpp",
+        "version": "4.1.1"
+      },
+      {
+        "name": "rxqt",
+        "version": "bb2138c"
+      },
+      {
+        "name": "libbson",
+        "version": "1.17.6"
+      }
+    ]
+  },
+  {
+    "platform": "Windows",
+    "packages": [
+      {
+        "name": "asiosdk",
+        "version": "2.3.3"
+      }
+    ]
+  },
+  {
+    "platform": "Linux",
+    "apt-packages": [
+      "libfontconfig1-dev",
+      "libfreetype6-dev",
+      "libx11-dev",
+      "libx11-xcb-dev",
+      "libxext-dev",
+      "libxfixes-dev",
+      "libxi-dev",
+      "libxrender-dev",
+      "libxcb1-dev",
+      "libxcb-glx0-dev",
+      "libxcb-keysyms1-dev",
+      "libxcb-image0-dev",
+      "libxcb-shm0-dev",
+      "libxcb-icccm4-dev",
+      "libxcb-sync0-dev",
+      "libxcb-xfixes0-dev",
+      "libxcb-shape0-dev",
+      "libxcb-randr0-dev",
+      "libxcb-render-util0-dev",
+      "libxcd-xinerama-dev",
+      "libxkbcommon-dev",
+      "libxkbcommon-x11-dev"
+    ]
+  },
+  {
+    "platform": "Darwin",
+    "brew-packages": [
+      "autoconf-archive",
+      "autoconf",
+      "automake",
+      "bison",
+      "cmake",
+      "gettext",
+      "gfortran",
+      "gperf",
+      "gtk-doc",
+      "libtool",
+      "meson",
+      "mono",
+      "nasm",
+      "ninja",
+      "pkg-config",
+      "texinfo",
+      "yasm"
+    ]
+  }
 ]

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-#project(Root)
+project(Root)
 
 #	if(DEFINED QT_PATH AND EXISTS ${QT_PATH})
 #		list(APPEND CMAKE_PREFIX_PATH ${QT_PATH})
