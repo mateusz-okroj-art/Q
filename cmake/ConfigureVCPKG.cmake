@@ -8,7 +8,7 @@ function(ReadVCPKGConfigurationFile variable_name)
 	set(${variable_name} ${file_str} PARENT_SCOPE)
 endfunction()
 
-function(ConfigurePlatform json_file platform_name)	
+function(ConfigurePlatform json_file platform_name packages_list_var_name)	
 	if(${platform_name} STREQUAL "Windows")
 		# Currently no required
 	elseif(${platform_name} STREQUAL "Linux")
@@ -24,13 +24,6 @@ function(ConfigurePlatform json_file platform_name)
 			COMMAND sudo apt upgrade
 		)
 
-		execute_process(
-			COMMAND apt list --installed
-			OUTPUT_VARIABLE out_var
-		)
-
-		#message(${out_var})
-
 		string(JSON arr_len LENGTH ${json_file})
 
 		foreach(i RANGE 0 ${arr_len})
@@ -44,15 +37,19 @@ function(ConfigurePlatform json_file platform_name)
 				string(JSON apt_required_packages GET ${json_file} apt-packages)
 
 				foreach(package_name ${apt_required_packages})
-
+					execute_process(
+						COMMAND sudo apt install ${package_name}
+					)
 				endforeach()
 			endif()
 		endforeach()
 	elseif(${platform_name} STREQUAL "Darwin")
-
+		# implement support for HomeBrew packages
 	else()
 		message(FATAL_ERROR "Configure VCPKG: Unsupported platform.")
 	endif()
+
+	# return list of packages from json to var
 endfunction()
 
 function(GetVCPKGPath variable_name)
@@ -96,35 +93,6 @@ function(DetectPlatformAndTripletName platform_var triplet_var)
 
 	set(${platform_var} ${CMAKE_SYSTEM_NAME} PARENT_SCOPE)
 	set(${triplet_var} ${triplet} PARENT_SCOPE)
-endfunction()
-
-function(ConfigureVCPKG)
-	GetVCPKGPath(vcpkg_app)
-	get_filename_component(vcpkg_dir ${vcpkg_app} DIRECTORY)
-
-	message(STATUS "Found VCPKG: ${vcpkg_app}")
-
-	find_program(git NAMES git)
-
-	message(STATUS "Updating VCPKG...")
-
-	execute_process(
-		WORKING_DIRECTORY ${vcpkg_dir}
-		COMMAND git pull -r
-	)
-
-	execute_process(COMMAND ${vcpkg_app} update)
-
-	message(STATUS "Reading packages.json...")
-	ReadVCPKGConfigurationFile(packages_json)
-
-	DetectPlatformAndTripletName(platform_name triplet)
-	message("Detected platform: ${platform_name} - ${triplet}")
-
-	message(STATUS "Configuring platform...")
-	ConfigurePlatform(${packages_json} ${platform_name})
-
-
 endfunction()
 
 function(Build_VCPKG vcpkg_libraries)
@@ -202,4 +170,33 @@ function(Build_VCPKG vcpkg_libraries)
 	endforeach()
 
 	set(triplet ${triplet} CACHE STRING "")
+endfunction()
+
+function(ConfigureVCPKG)
+	GetVCPKGPath(vcpkg_app)
+	get_filename_component(vcpkg_dir ${vcpkg_app} DIRECTORY)
+
+	message(STATUS "Found VCPKG: ${vcpkg_app}")
+
+	find_program(git NAMES git)
+
+	message(STATUS "Updating VCPKG...")
+
+	execute_process(
+		WORKING_DIRECTORY ${vcpkg_dir}
+		COMMAND git pull -r
+	)
+
+	execute_process(COMMAND ${vcpkg_app} update)
+
+	message(STATUS "Reading packages.json...")
+	ReadVCPKGConfigurationFile(packages_json)
+
+	DetectPlatformAndTripletName(platform_name triplet)
+	message("Detected platform: ${platform_name} - ${triplet}")
+
+	message(STATUS "Configuring platform...")
+	ConfigurePlatform(${packages_json} ${platform_name})
+
+	BUILD_VCPKG()
 endfunction()
